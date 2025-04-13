@@ -4,21 +4,7 @@ CREATE DATABASE bookstore_db;
 --Creating Tables for the Bookstore Database
 USE bookstore_db;
 
--- 1. book_language
-CREATE TABLE book_language (
-    language_id INT PRIMARY KEY,
-    language_name VARCHAR(100) NOT NULL
-);
-
--- 2. publisher
-CREATE TABLE publisher (
-    publisher_id INT PRIMARY KEY,
-    publisher_name VARCHAR(255) NOT NULL,
-    contact_email VARCHAR(255),
-    contact_phone VARCHAR(50)
-);
-
--- 3. book
+-- 1. book
 CREATE TABLE book (
     book_id INT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -31,16 +17,15 @@ CREATE TABLE book (
     FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id),
     FOREIGN KEY (language_id) REFERENCES book_language(language_id)
 );
-
--- 4. author
+-- 2. author
 CREATE TABLE author (
     author_id INT PRIMARY KEY,
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     bio TEXT
-);
+); 
 
--- 5. book_author
+-- 3. book_author
 CREATE TABLE book_author (
     book_id INT,
     author_id INT,
@@ -49,30 +34,22 @@ CREATE TABLE book_author (
     FOREIGN KEY (author_id) REFERENCES author(author_id)
 );
 
--- 6. country
-CREATE TABLE country (
-    country_id INT PRIMARY KEY,
-    country_name VARCHAR(100) NOT NULL
+-- 4. book_language
+CREATE TABLE book_language (
+    language_id INT PRIMARY KEY,
+    language_name VARCHAR(100) NOT NULL
 );
 
--- 7. address
-CREATE TABLE address (
-    address_id INT PRIMARY KEY,
-    street VARCHAR(255),
-    city VARCHAR(100),
-    state VARCHAR(100),
-    postal_code VARCHAR(20),
-    country_id INT,
-    FOREIGN KEY (country_id) REFERENCES country(country_id)
+-- 5. publisher
+CREATE TABLE publisher (
+    publisher_id INT PRIMARY KEY,
+    publisher_name VARCHAR(255) NOT NULL,
+    contact_email VARCHAR(255),
+    contact_phone VARCHAR(50)
 );
 
--- 8. address_status
-CREATE TABLE address_status (
-    status_id INT PRIMARY KEY,
-    status_name VARCHAR(50) NOT NULL
-);
 
--- 9. customer
+-- 6. customer
 CREATE TABLE customer (
     customer_id INT PRIMARY KEY,
     first_name VARCHAR(100),
@@ -81,7 +58,7 @@ CREATE TABLE customer (
     phone_number VARCHAR(50)
 );
 
--- 10. customer_address
+-- 7. customer_address
 CREATE TABLE customer_address (
     customer_id INT,
     address_id INT,
@@ -92,14 +69,32 @@ CREATE TABLE customer_address (
     FOREIGN KEY (status_id) REFERENCES address_status(status_id)
 );
 
--- 11. shipping_method
-CREATE TABLE shipping_method (
-    shipping_method_id INT PRIMARY KEY,
-    method_name VARCHAR(100),
-    cost DECIMAL(10,2)
+-- 8. address_status
+CREATE TABLE address_status (
+    status_id INT PRIMARY KEY,
+    status_name VARCHAR(50) NOT NULL
 );
 
--- 12. cust_order
+
+-- 9. address
+CREATE TABLE address (
+    address_id INT PRIMARY KEY,
+    street VARCHAR(255),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    postal_code VARCHAR(20),
+    country_id INT,
+    FOREIGN KEY (country_id) REFERENCES country(country_id)
+);
+
+
+-- 10. country
+CREATE TABLE country (
+    country_id INT PRIMARY KEY,
+    country_name VARCHAR(100) NOT NULL
+);
+
+-- 11. cust_order
 CREATE TABLE cust_order (
     order_id INT PRIMARY KEY,
     customer_id INT,
@@ -110,12 +105,25 @@ CREATE TABLE cust_order (
     FOREIGN KEY (shipping_method_id) REFERENCES shipping_method(shipping_method_id)
 );
 
--- 13. order_status
-CREATE TABLE order_status (
-    status_id INT PRIMARY KEY,
-    status_name VARCHAR(50)
+-- 12. order_line
+CREATE TABLE order_line (
+    order_line_id INT PRIMARY KEY,
+    order_id INT,
+    book_id INT,
+    quantity INT,
+    unit_price DECIMAL(10,2),
+    FOREIGN KEY (order_id) REFERENCES cust_order(order_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
 );
 
+
+-- 13. shipping_method
+CREATE TABLE shipping_method (
+    shipping_method_id INT PRIMARY KEY,
+    method_name VARCHAR(100),
+    cost DECIMAL(10,2)
+);
+ 
 -- 14. order_history
 CREATE TABLE order_history (
     history_id INT PRIMARY KEY,
@@ -126,15 +134,10 @@ CREATE TABLE order_history (
     FOREIGN KEY (status_id) REFERENCES order_status(status_id)
 );
 
--- 15. order_line
-CREATE TABLE order_line (
-    order_line_id INT PRIMARY KEY,
-    order_id INT,
-    book_id INT,
-    quantity INT,
-    unit_price DECIMAL(10,2),
-    FOREIGN KEY (order_id) REFERENCES cust_order(order_id),
-    FOREIGN KEY (book_id) REFERENCES book(book_id)
+-- 15. order_status
+CREATE TABLE order_status (
+    status_id INT PRIMARY KEY,
+    status_name VARCHAR(50)
 );
 
 
